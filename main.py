@@ -7,25 +7,6 @@ import wolframalpha
 from AppOpener import open,close
 
 import json
-import spotipy
-
-
-
-username = 'vmd'
-clientID = 'bfa01be47fe048589d1042088022c370'
-clientSecret = ('292ce3a0eec5409fa34e331bd93ebe51')
-redirect_uri = 'http://google.com/callback/'
-
-oauth_object = spotipy.SpotifyOAuth(clientID, clientSecret, redirect_uri)
-token_dict = oauth_object.get_access_token()
-token = token_dict['access_token']
-spotifyObject = spotipy.Spotify(auth=token)
-user_name = spotifyObject.current_user()
-
-# To print the response in readable format.
-print(json.dumps(user_name, sort_keys=True, indent=4))
-
-
 
 chrome_path = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
 webbrowser.register('chrome',None,webbrowser.BackgroundBrowser(chrome_path))
@@ -161,12 +142,3 @@ if __name__ == '__main__':
                 speak('Opening')
                 query = ' '.join(query[1:])
                 open(query)
-            if query[0] == 'play':
-                speak('Playing')
-                query = ' '.join(query[1:])
-                search_song = query
-                results = spotifyObject.search(search_song, 1, 0, "track")
-                songs_dict = results['tracks']
-                song_items = songs_dict['items']
-                song = song_items[0]['external_urls']['spotify']
-                webbrowser.open(song)
