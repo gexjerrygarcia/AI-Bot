@@ -1,3 +1,5 @@
+#Original program contains the feature of allowing the user to play music on spotify through the program but the implementation for it will not be featured in any public spaces due to user privacy
+
 from datetime import datetime
 import speech_recognition as sr
 import pyttsx3
@@ -10,7 +12,7 @@ import json
 
 chrome_path = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
 webbrowser.register('chrome',None,webbrowser.BackgroundBrowser(chrome_path))
-appID = '7Q2KXT-PURQQWXQHW'
+appID = ''#APP ID removed for privacy concerns
 wolframClient = wolframalpha.Client(appID)
 
 
