@@ -7,14 +7,12 @@ import webbrowser
 import wikipedia
 import wolframalpha
 from AppOpener import open,close
-
 import json
 
 chrome_path = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
 webbrowser.register('chrome',None,webbrowser.BackgroundBrowser(chrome_path))
 appID = ''#APP ID removed for privacy concerns
 wolframClient = wolframalpha.Client(appID)
-
 
 
 engine = pyttsx3.init()
@@ -26,8 +24,10 @@ def speak(text,rate = 120):
     engine.setProperty('rate',rate)
     engine.say(text)
     engine.runAndWait()
+
 def searchWikipedia(query = ''):
     searchresults = wikipedia.search(query)
+    
     if not searchresults:
         print('No wikipedia result')
         return 'No result received'
@@ -35,6 +35,7 @@ def searchWikipedia(query = ''):
        wikipage = wikipedia.page(searchresults[0])
     except wikipedia.DisambiguationError as error:
        wikipage = wikipedia.page(error.options[0])
+    
     print(wikipage.title)
     wikiSummary = str(wikipage.summary)
     return wikiSummary
@@ -49,7 +50,6 @@ def listorDict(var):
 def search_wolframalpha(query = ''):
     response = wolframClient.query(query)
 
-
     if response['@success'] == 'false':
         return 'Could not compute'
     else:
@@ -58,11 +58,10 @@ def search_wolframalpha(query = ''):
 
         pod1 = response['pod'][1]
 
-
-
         if(('result') in pod1['@title'].lower()) or (pod1.get('@primary','false') == 'true') or ('definition' in pod1['@title'].lower()):
             result = listorDict(pod1['subpod'])
             return result.split("(")[0]
+        
         else:
             question = listorDict(pod0['subpod'])
             return question.split("(")[0]
@@ -84,11 +83,13 @@ def parseCommand():
         print('Recognizing speech...')
         query = listener.recognize_google(input_speech,language = 'en_gb')
         print(f'The input speech was: {query}')
+    
     except Exception as exception:
         print('I did not quite catch that')
         speak('I did not quite catch that')
         print(exception)
         return 'None'
+    
     return query
 
 if __name__ == '__main__':
@@ -100,7 +101,6 @@ if __name__ == '__main__':
 
         if query[0] == activationWord:
             query.pop(0)
-
 
             if query[0] == 'say':
                 if 'hello' in query:
@@ -119,6 +119,7 @@ if __name__ == '__main__':
                 query = ' '.join(query[1:])
                 speak('Querying the universal databank...')
                 speak(searchWikipedia(query))
+            
             if query[0] == 'compute' or query[0] == 'computer':
                 query = ' '.join(query[1:])
                 speak('Computing')
@@ -127,19 +128,21 @@ if __name__ == '__main__':
                     speak(result)
                 except:
                     speak('Unable to compute')
+            
             if query[0] == 'log':
                 speak('Ready to record your log!')
                 newNote = parseCommand().lower()
 
                 now = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
 
-
                 with open('note_%s.txt' % now,'w') as newFile:
                     newFile.write(newNote)
                 speak('Log written')
+            
             if query[0] == 'exit':
                 speak('Goodbye')
                 break
+            
             if query[0] == 'open':
                 speak('Opening')
                 query = ' '.join(query[1:])
